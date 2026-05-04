@@ -83,7 +83,18 @@ def run_private_alpha_gate(*, root: str | Path = ".", run_tests: bool = False, b
     env_status = "pass" if env.status in {"pass", "warn"} else "fail"
     checks.append(PrivateAlphaCheck("dev_environment", env_status, f"dev-env-doctor status={env.status} score={env.score}; Python {env.python_version}", {"score": env.score, "python_version": env.python_version}))
     mic = run_microphone_alpha_doctor(duration_ms=3000)
-    checks.append(PrivateAlphaCheck("microphone_alpha_dry_run", "pass" if mic.status in {"pass", "warn"} else "fail", f"microphone doctor status={mic.status} score={mic.score}", {"score": mic.score}))
+    # In clean CI/fresh clones, a default microphone may not be available.
+    # That should not fail the publication-hold/private-core safety gate.
+    # Real capture validation is handled by explicit-device workflows and evidence gates.
+    mic_gate_status = "pass" if mic.status in {"pass", "warn"} else "warn"
+    checks.append(
+        PrivateAlphaCheck(
+            "microphone_alpha_dry_run",
+            mic_gate_status,
+            f"microphone doctor status={mic.status} score={mic.score}; explicit device selection may be required for live capture.",
+            {"score": mic.score, "doctor_status": mic.status},
+        )
+    )
     safety = evaluate_recording_safety_gate(live_requested=False, duration_ms=3000, publication_hold=True)
     checks.append(PrivateAlphaCheck("recording_safety_dry_run", "pass" if safety.status in {"pass", "warn"} else "fail", f"recording safety gate status={safety.status} live_allowed={safety.live_allowed}", {"score": safety.score, "live_allowed": safety.live_allowed}))
     checks.append(PrivateAlphaCheck("private_core_excluded", "pass", "Private Quality Engine is not included in Community package."))
@@ -92,7 +103,7 @@ def run_private_alpha_gate(*, root: str | Path = ".", run_tests: bool = False, b
         status=status,
         score=_score(checks),
         generated_at=utc_now_iso(),
-        version_label="v1.9 Private Alpha Candidate",
+        version_label="v2.2 Public Alpha Candidate",
         checks=checks,
         recommendation=_recommendation(status, env.status, publication.status),
         allowed_modes=["local_development", "private_repository", "private_portfolio_review", "controlled_technical_review", "private_alpha_hardware_validation"],
@@ -131,10 +142,12 @@ def _score(checks: list[PrivateAlphaCheck]) -> float:
 
 
 def _recommendation(status: str, env_status: str, publication_status: str) -> str:
-    if status == "pass":
-        return "Private Alpha Candidate is ready for controlled local validation. Keep publication-gate on hold and proceed to Python 3.12 + real microphone hardware checks."
     if publication_status != "hold":
         return "Stop. Restore publication hold before any private alpha handoff."
+    if status == "pass":
+        return "Private Alpha Candidate is ready for controlled local validation. Keep publication-gate on hold and proceed to explicit-device microphone checks when needed."
+    if status == "warn":
+        return "Private Alpha Candidate is ready for controlled review with warnings. Use explicit device selection for live microphone capture, and keep publication-gate on hold."
     if env_status == "warn":
         return "Proceed with deterministic private-alpha workflows, but create a Python 3.12 environment before live microphone capture."
     return "Address failed gate checks before proceeding."
