@@ -1,0 +1,14 @@
+{
+  "default": {
+    "sections": ["概要", "決定事項", "ToDo", "未解決論点", "リスク", "トピック"],
+    "evidence_required": true
+  },
+  "engineering": {
+    "sections": ["概要", "決定事項", "Issue", "ブロッカー", "ToDo", "次回確認事項"],
+    "evidence_required": true
+  },
+  "sales": {
+    "sections": ["顧客課題", "提案内容", "温度感", "競合", "予算", "次アクション"],
+    "evidence_required": true
+  }
+}

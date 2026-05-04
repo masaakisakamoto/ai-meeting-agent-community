@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Meeting Agent Community — Desktop Alpha</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Community v2.2 / Desktop Alpha</p>
+        <h1>AI Meeting Agent</h1>
+        <p class="subtitle">ローカル優先・証跡付き・公開保留を維持しながら、Launch Assets・Evidence Export・Screenshot Automationまで見えるPrivate Alpha候補のDesktop Alpha。</p>
+      </div>
+      <div class="status-card" id="system-status">
+        <span class="pulse"></span>
+        <strong>Ready</strong>
+        <small>Static UI with optional local bridge</small>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel hero-panel">
+        <div class="controls">
+          <button id="start-btn" class="primary">録音デモ開始</button>
+          <button id="pause-btn">一時停止</button>
+          <button id="reset-btn">リセット</button>
+          <label class="speed-control">Speed
+            <select id="speed-select">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+              <option value="4">4x</option>
+            </select>
+          </label>
+        </div>
+        <div class="recording-notice">
+          <strong>録音・文字起こし通知:</strong>
+          このプレビューはデモデータまたはローカルBridgeを使います。本番では参加者への録音通知、同意、保存期間表示を必須にしてください。
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-label"><span id="meeting-title">Meeting</span><span id="progress-text">0%</span></div>
+          <div class="progress-bar"><span id="progress-bar"></span></div>
+        </div>
+      </section>
+
+      <section class="panel workflow-panel">
+        <div class="panel-title">
+          <h2>Desktop Workflow</h2>
+          <span id="workflow-status">preview</span>
+        </div>
+        <div id="workflow-steps" class="workflow-steps"></div>
+        <button id="workflow-run-btn" class="primary-light">Workflowプレビュー再生</button>
+      </section>
+
+      <section class="panel bridge-panel">
+        <div class="panel-title">
+          <h2>Desktop Bridge</h2>
+          <span id="bridge-status-label">offline-safe</span>
+        </div>
+        <p class="small-note">ローカルBridgeが起動している場合、このUIからヘルスチェック・デバイス一覧・シミュレーション録音を呼び出せます。</p>
+        <div class="bridge-actions">
+          <button id="bridge-health">Bridge Health</button>
+          <button id="bridge-devices">Devices</button>
+          <button id="bridge-workflow" class="primary-light">Simulated Recording</button>
+          <button id="bridge-mic-doctor">Mic Doctor</button>
+          <button id="bridge-mic-alpha" class="primary-light">Mic Alpha Dry Run</button>
+          <button id="bridge-safety-gate">Safety Gate</button>
+          <button id="bridge-env-doctor">Env Doctor</button>
+          <button id="bridge-private-alpha" class="primary-light">Private Alpha Gate</button>
+          <button id="bridge-public-alpha">Public Alpha Gate</button>
+          <button id="bridge-public-plan" class="primary-light">Public Plan</button>
+          <button id="bridge-public-candidate-pack">Candidate Pack</button>
+          <button id="bridge-public-candidate-gate" class="primary-light">Candidate Gate</button>
+          <button id="bridge-maintainer-pack">Maintainer Pack</button>
+          <button id="bridge-maintainer-dashboard" class="primary-light">Maintainer Dashboard</button>
+          <button id="bridge-real-capture-pack">Real Capture Pack</button>
+          <button id="bridge-real-capture-gate" class="primary-light">Real Capture Gate</button>
+          <button id="bridge-capture-plan">Capture Plan</button>
+          <button id="bridge-post-capture-gate">Post Capture Gate</button>
+          <button id="bridge-mic-to-minutes" class="primary-light">Mic → Minutes</button>
+          <button id="bridge-validation-pack">Validation Pack</button>
+          <button id="bridge-validation-run" class="primary-light">Validate Capture</button>
+          <button id="bridge-asr-pack">ASR Pack</button>
+          <button id="bridge-asr-run" class="primary-light">Validate ASR</button>
+          <button id="bridge-asr-minutes" class="primary-light">ASR → Minutes</button>
+          <button id="bridge-local-asr-pack">Local ASR Pack</button>
+          <button id="bridge-local-asr-run" class="primary-light">Local ASR Smoke</button>
+          <button id="bridge-local-asr-gate">Local ASR Gate</button>
+          <button id="bridge-launch-assets">Launch Assets</button>
+          <button id="bridge-launch-polish" class="primary-light">Launch Polish</button>
+          <button id="bridge-evidence-pack">Evidence Pack</button>
+          <button id="bridge-evidence-collect" class="primary-light">Collect Evidence</button>
+          <button id="bridge-screenshot-pack">Screenshot Pack</button>
+          <button id="bridge-screenshot-gate" class="primary-light">Screenshot Gate</button>
+          <button id="bridge-evidence-export-pack">Export Pack</button>
+          <button id="bridge-evidence-export-run" class="primary-light">Export Evidence</button>
+          <button id="bridge-evidence-export-gate">Export Gate</button>
+        </div>
+        <div id="bridge-mic-result" class="workflow-result"></div>
+        <pre id="bridge-output" class="json-preview">Bridge未接続。静的UIとしても利用できます。</pre>
+      </section>
+
+      <section class="panel transcript-panel">
+        <div class="panel-title">
+          <h2>Live Transcript</h2>
+          <span id="transcript-count">0 segments</span>
+        </div>
+        <div id="transcript-list" class="transcript-list" aria-live="polite"></div>
+      </section>
+
+      <aside class="panel intelligence-panel">
+        <div class="panel-title">
+          <h2>Meeting Intelligence</h2>
+          <span>candidate</span>
+        </div>
+        <div class="tabs">
+          <button class="tab active" data-tab="decisions">決定事項</button>
+          <button class="tab" data-tab="actions">ToDo</button>
+          <button class="tab" data-tab="questions">論点</button>
+        </div>
+        <div class="tab-panel active" id="tab-decisions"></div>
+        <div class="tab-panel" id="tab-actions"></div>
+        <div class="tab-panel" id="tab-questions"></div>
+      </aside>
+
+      <section class="panel evidence-panel">
+        <div class="panel-title">
+          <h2>Evidence Preview</h2>
+          <span>クリックで根拠確認</span>
+        </div>
+        <div id="evidence-preview" class="evidence-preview">抽出候補または発言を選択すると、根拠発言がここに表示されます。</div>
+      </section>
+
+      <section class="panel audio-panel">
+        <div class="panel-title">
+          <h2>Audio Readiness</h2>
+          <span id="level-summary">level / diagnostics</span>
+        </div>
+        <div id="readiness-grid" class="readiness-grid"></div>
+        <div id="mic-readiness-grid" class="readiness-grid"></div>
+        <div id="level-meter" class="level-meter"></div>
+      </section>
+
+      <section class="panel export-panel">
+        <div class="panel-title">
+          <h2>Local Export</h2>
+          <span>browser-only</span>
+        </div>
+        <div class="export-grid">
+          <button id="download-transcript">Transcript JSON</button>
+          <button id="download-minutes">Minutes Markdown</button>
+          <button id="download-events">Replay Events JSON</button>
+          <button id="download-workflow">Workflow JSON</button>
+        </div>
+        <p class="small-note">このUIは静的アセットとしても、Electron/TauriのWebViewとしても動かせる構成です。</p>
+      </section>
+    </main>
+
+    <script src="bridge_config.js"></script>
+    <script src="demo_data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+[package]
+name = "ai-meeting-agent-desktop"
+version = "0.6.0"
+edition = "2021"
+
+[dependencies]
+tauri = { version = "2", features = [] }
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }

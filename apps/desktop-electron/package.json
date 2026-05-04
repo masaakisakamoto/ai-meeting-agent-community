@@ -1,0 +1,14 @@
+{
+  "name": "ai-meeting-agent-desktop-alpha",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Electron shell for AI Meeting Agent Community Desktop Alpha",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0"
+  }
+}

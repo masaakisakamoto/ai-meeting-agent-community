@@ -1,0 +1,28 @@
+{
+  "schema_version": "publication-policy/v1",
+  "project": "ai-meeting-agent-community",
+  "current_stage": "private_development",
+  "public_oss_announcement_allowed": false,
+  "target_public_stage": "public_alpha",
+  "hold_reason": "Keep the repository private until the product reaches the planned public announcement stage.",
+  "allowed_modes": [
+    "local_development",
+    "private_repository",
+    "private_portfolio_review",
+    "controlled_technical_review"
+  ],
+  "blocked_modes": [
+    "public_github_repository",
+    "sns_announcement",
+    "commercial_landing_page",
+    "public_release_blog"
+  ],
+  "minimum_public_exit_criteria": [
+    "Bridge UI reflects connected/offline state correctly",
+    "UI can display device and simulated workflow results",
+    "At least one real microphone alpha path is validated on macOS",
+    "Public README has screenshots, limitations, and no overclaims",
+    "Private core boundary and leakage scans pass",
+    "Maintainer explicitly flips public_oss_announcement_allowed to true"
+  ]
+}

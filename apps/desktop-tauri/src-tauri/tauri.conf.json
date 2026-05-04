@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AI Meeting Agent Community",
+  "version": "0.6.0",
+  "identifier": "dev.ai-meeting-agent.community",
+  "build": {
+    "frontendDist": "../src"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "AI Meeting Agent Community",
+        "width": 1280,
+        "height": 860
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}

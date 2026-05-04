@@ -1,0 +1,84 @@
+
+__pycache__/
+._*
+.coverage
+.DS_Store
+.env
+.env.*
+.idea/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv*/
+.venv/
+.venvs/
+.vscode/
+*.aac
+*.egg-info/
+*.flac
+*.log
+*.m4a
+*.mp3
+*.py[cod]
+*.pyd
+*.pyo
+*.tar.gz
+*.wav
+# Builds
+# Environments
+# Generated evidence and review directories
+# Generated gate/review outputs
+# Generated outputs
+# Local generated review bundles
+# Local validation artifacts - do not publish raw meeting/audio data
+# Local validation environments
+# macOS metadata
+# OS/editor
+# Python
+# Raw audio and media
+ai_meeting_agent_public_alpha_review*/
+asr_minutes_faster_whisper/
+asr_validation_faster_whisper/
+build/
+capture_validation_pack/
+capture_validation_run.json
+capture_validation_run.md
+demo_out/
+dist/
+evidence_export_gate.json
+evidence_export_gate.md
+evidence_export_pack/
+evidence_export/
+evidence_runs/
+FINAL_GO_NO_GO_REVIEW.md
+htmlcov/
+launch_assets_gate.json
+launch_assets_gate.md
+launch_assets/
+local_asr_smoke_gate.json
+local_asr_smoke_gate.md
+local_asr_smoke/
+maintainer_dashboard/
+mic_alpha_live/
+mic_alpha_reference.txt
+mic_minutes_live/
+outputs/
+public_alpha_candidate_gate.json
+public_alpha_candidate_gate.md
+public_alpha_candidate/
+public_alpha_readiness.json
+public_alpha_readiness.md
+publication_gate.json
+publication_gate.md
+real_capture_execution_gate.json
+real_capture_execution_gate.md
+real_capture_execution_pack/
+real_mac_evidence/
+real_mac_evidence/collected/
+release_check.json
+release_check.md
+release_readiness.json
+release_readiness.md
+screenshot_automation/
+screenshots/
+venv/

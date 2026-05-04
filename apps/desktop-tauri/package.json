@@ -1,0 +1,14 @@
+{
+  "name": "ai-meeting-agent-desktop-tauri-skeleton",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Skeleton for embedding the Community Desktop Lite UI in a Tauri shell.",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

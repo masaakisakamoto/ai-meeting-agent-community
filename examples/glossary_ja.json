@@ -1,0 +1,19 @@
+{
+  "terms": [
+    {
+      "canonical": "AI Meeting Agent",
+      "aliases": ["AIミーティングエージェント", "会議エージェント", "ミーティングエージェント"],
+      "type": "product"
+    },
+    {
+      "canonical": "Tauri",
+      "aliases": ["タウリ", "タウリィ", "トーリ"],
+      "type": "technology"
+    },
+    {
+      "canonical": "Open-Core",
+      "aliases": ["オープンコア", "open core", "Open Core"],
+      "type": "architecture"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "export.markdown",
+  "name": "Markdown Exporter",
+  "version": "0.2.0",
+  "kind": "exporter",
+  "entrypoint": "meeting_agent.exporters.markdown:MarkdownExporter",
+  "description": "Exports evidence-linked minutes to Markdown.",
+  "capabilities": ["minutes", "evidence", "local_file"],
+  "license": "Apache-2.0"
+}
