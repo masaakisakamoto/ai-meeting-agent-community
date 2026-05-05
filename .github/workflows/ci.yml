@@ -61,17 +61,20 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git grep -n "/Users/masaakisakamoto"; then
+          # Avoid CI self-matches by excluding this workflow file from leak-pattern scans.
+          SEARCH_PATHS=(-- . ':(exclude).github/workflows/ci.yml')
+
+          if git grep -n -E '/Users/[A-Za-z0-9._-]+' "${SEARCH_PATHS[@]}"; then
             echo "Personal absolute path detected."
             exit 1
           fi
 
-          if git grep -n "\.venv312"; then
+          if git grep -n -E '\.venv312' "${SEARCH_PATHS[@]}"; then
             echo "Old local venv reference detected."
             exit 1
           fi
 
-          if git grep -n "v2.0 Public Alpha\|2.0 Public Alpha\|ai-meeting-agent-community-v1.9"; then
+          if git grep -n -E 'v2\.0 Public Alpha|2\.0 Public Alpha|ai-meeting-agent-community-v1\.9' "${SEARCH_PATHS[@]}"; then
             echo "Old public alpha/version reference detected."
             exit 1
           fi
