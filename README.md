@@ -8,7 +8,15 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - The highest-value production quality engine can remain private and be attached through provider/plugin APIs.
 - Optional ASR/LLM providers can be swapped without rewriting the product.
 
-> Current implementation status: v2.2 Public Alpha Candidate with publication intentionally on hold. The verified parts are transcript parsing, rule-based minutes generation, evidence linking, verification, markdown/HTML/CSV export, redaction, metrics, plugin registry, CLI flows, deterministic transcript replay, simulated audio capture, WAV session persistence, sidecar audio transcription workflow, audio quality diagnostics, capture readiness checks, optional microphone capture, local ASR environment diagnostics, a dependency-free Desktop Lite UI, and a local Desktop Alpha Bridge with deterministic smoke workflow, safe-by-default real microphone alpha preflight, microphone dry-run workflow, live recording safety gate, consent/audit artifacts, Desktop Bridge microphone routes, Private Alpha gate, developer environment doctor, live capture plan, post-capture microphone-to-minutes workflow, real-capture validation pack/run workflows, local ASR smoke gates, private launch asset polish workflows, Real Mac evidence collection, and Public Alpha Candidate gate workflows, Maintainer Evidence Dashboard workflows, Evidence Export workflows, and Screenshot Automation Prep workflows. Heavyweight ASR, OS-specific system-audio capture, production model routing, and private quality-engine logic remain provider extension points.
+> Current implementation status: **v2.2 Public Alpha Candidate** with publication intentionally on hold.
+>
+> This Community Edition has validated the core local workflow: transcript ingestion, evidence-linked minutes, rule-based extraction, verification, exports, simulated audio, controlled real microphone alpha capture, local ASR smoke with faster-whisper, ASR → Minutes, Desktop Alpha Bridge, Evidence Export, Screenshot Readiness, and Public Alpha Candidate gates.
+>
+> This is **not production-ready**. It does not include a signed native installer, system audio loopback capture, production Japanese Quality Engine, enterprise admin/SSO/billing, or hosted compliance controls.
+>
+> Raw meeting audio should not be committed to this repository. Recording real meetings requires participant notice and appropriate consent.
+>
+> Publication remains blocked until the maintainer intentionally updates `configs/publication_policy.json`.
 
 ---
 
