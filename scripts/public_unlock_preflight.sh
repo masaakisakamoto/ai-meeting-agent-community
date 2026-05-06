@@ -33,6 +33,7 @@ PY
 
 echo
 echo "== Unsafe tracked files =="
+
 git ls-files | grep -Ei '\.(wav|mp3|m4a|flac|aac)$' && {
   echo "ERROR: raw audio/media tracked"
   exit 1
@@ -48,7 +49,9 @@ git ls-files | grep -Ei '(__pycache__|\.pyc$|\.pyo$|(^|/)\._|\.DS_Store$)' && {
   exit 1
 } || echo "OK: no tracked pycache/macOS metadata"
 
-git grep -n "/Users/masaakisakamoto" && {
+PERSONAL_PATH_REGEX='/Users/[A-Za-z0-9._-]+'
+
+git grep -n -E "$PERSONAL_PATH_REGEX" -- . ':(exclude).github/workflows/ci.yml' && {
   echo "ERROR: personal absolute path detected"
   exit 1
 } || echo "OK: no personal absolute paths"
