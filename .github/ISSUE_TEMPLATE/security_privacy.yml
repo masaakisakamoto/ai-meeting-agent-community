@@ -1,0 +1,32 @@
+name: Security or privacy concern
+description: Report a security/privacy concern without disclosing sensitive details publicly.
+title: "[Security/Privacy]: "
+labels: ["security", "privacy"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not post exploit details, secrets, raw audio, private transcripts, or personal data in a public issue.
+
+        If GitHub Security Advisories are enabled, use a private security advisory instead.
+        Otherwise, describe the affected area at a high level and ask for a private triage path.
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Raw audio / transcript exposure
+        - Secret or credential exposure
+        - Private core boundary concern
+        - Dependency or license concern
+        - Recording consent concern
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: High-level summary
+      description: Keep this high-level. Do not include sensitive details.
+    validations:
+      required: true

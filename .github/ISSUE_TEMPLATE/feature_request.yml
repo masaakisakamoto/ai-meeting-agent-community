@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest an improvement for the Community package.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please keep feature requests scoped to the Community package.
+
+        Do not include private meeting data, raw audio, credentials, or private Quality Engine details.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem would this feature solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would you like to happen?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI
+        - Desktop Alpha / Bridge
+        - Audio diagnostics
+        - ASR workflow
+        - Minutes / verification
+        - Exports
+        - Documentation
+        - Other

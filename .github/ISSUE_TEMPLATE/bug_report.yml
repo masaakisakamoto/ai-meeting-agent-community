@@ -1,0 +1,51 @@
+name: Bug report
+description: Report a reproducible issue in the Community package.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug.
+
+        Please do not include:
+        - raw meeting audio
+        - private transcripts
+        - customer or participant data
+        - API keys or credentials
+        - private Quality Engine code
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Which version or branch are you using?
+      placeholder: "v2.2.0 / main / public-alpha-candidate-v2.2"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide minimal steps using safe demo data only.
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or command output
+      description: Redact secrets, private transcripts, and personal data before posting.
