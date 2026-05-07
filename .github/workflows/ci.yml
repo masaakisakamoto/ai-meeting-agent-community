@@ -108,6 +108,10 @@ jobs:
           assert data.get("private_core_included") is False, data
           PY
 
+      - name: Public unlock preflight must remain on HOLD
+        run: |
+          bash scripts/public_unlock_preflight.sh
+
       - name: Private alpha gate
         run: |
           PYTHONPATH=src python -m meeting_agent private-alpha-gate --root .
