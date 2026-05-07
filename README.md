@@ -8,7 +8,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - The highest-value production quality engine can remain private and be attached through provider/plugin APIs.
 - Optional ASR/LLM providers can be swapped without rewriting the product.
 
-> Current implementation status: **v2.2 Public Alpha Candidate** with publication intentionally on hold.
+> Current implementation status: **v2.2 Public Alpha**.
 >
 > This Community Edition has validated the core local workflow: transcript ingestion, evidence-linked minutes, rule-based extraction, verification, exports, simulated audio, controlled real microphone alpha capture, local ASR smoke with faster-whisper, ASR → Minutes, Desktop Alpha Bridge, Evidence Export, Screenshot Readiness, and Public Alpha Candidate gates.
 >
@@ -16,7 +16,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 >
 > Raw meeting audio should not be committed to this repository. Recording real meetings requires participant notice and appropriate consent.
 >
-> Publication remains blocked until the maintainer intentionally updates `configs/publication_policy.json`.
+> Public Alpha repository publication was intentionally unlocked by the maintainer. SNS announcements, commercial landing pages, and public release blogs remain blocked until separately approved.
 
 ---
 

@@ -1,28 +1,31 @@
 {
   "schema_version": "publication-policy/v1",
   "project": "ai-meeting-agent-community",
-  "current_stage": "private_development",
-  "public_oss_announcement_allowed": false,
+  "current_stage": "public_alpha",
+  "public_oss_announcement_allowed": true,
   "target_public_stage": "public_alpha",
-  "hold_reason": "Keep the repository private until the product reaches the planned public announcement stage.",
+  "hold_reason": "Public Alpha repository publication has been intentionally unlocked by the maintainer.",
   "allowed_modes": [
     "local_development",
     "private_repository",
     "private_portfolio_review",
-    "controlled_technical_review"
+    "controlled_technical_review",
+    "private_alpha_hardware_validation",
+    "public_github_repository",
+    "public_alpha_release"
   ],
   "blocked_modes": [
-    "public_github_repository",
     "sns_announcement",
     "commercial_landing_page",
     "public_release_blog"
   ],
   "minimum_public_exit_criteria": [
-    "Bridge UI reflects connected/offline state correctly",
+    "Bridge UI reflects connected/offline state clearly enough for alpha users",
     "UI can display device and simulated workflow results",
     "At least one real microphone alpha path is validated on macOS",
-    "Public README has screenshots, limitations, and no overclaims",
+    "Public README has limitations and no production overclaims",
     "Private core boundary and leakage scans pass",
-    "Maintainer explicitly flips public_oss_announcement_allowed to true"
+    "Maintainer explicitly flips public_oss_announcement_allowed to true",
+    "Repository visibility is intentionally changed by the maintainer"
   ]
 }

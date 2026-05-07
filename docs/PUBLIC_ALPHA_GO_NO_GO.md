@@ -2,14 +2,15 @@
 
 ## Current decision
 
-Status: Public Alpha Candidate  
-Public release: HOLD  
-Decision: Do not unlock publication until maintainer explicitly approves.
+Status: Public Alpha  
+Repository publication: GO  
+Production release: NO
+
+Publication was intentionally unlocked by the maintainer for the Public Alpha repository.
 
 ## Candidate evidence
 
 - Release check: pass
-- Publication gate: hold
 - Real Mac microphone capture evidence: pass
 - Audio quality diagnostics: pass
 - faster-whisper local ASR smoke: pass
@@ -19,25 +20,33 @@ Decision: Do not unlock publication until maintainer explicitly approves.
 - Screenshot readiness: pass
 - Private core excluded: pass
 
-## Remaining unlock gate
+## Public Alpha limitations
 
-Publication remains blocked by `configs/publication_policy.json`.
+This is not production-ready.
 
-Before public release, maintainer must explicitly approve:
+Not included:
 
-- README and launch copy
-- Known limitations
-- Security and privacy posture
-- Private core boundary
-- No raw audio committed
-- No secrets committed
-- No generated evidence directories committed
-- No accidental private modules
-- Rollback plan
+- signed native installer
+- system audio loopback capture
+- production Japanese Quality Engine
+- enterprise SSO/RBAC/billing/compliance stack
+- guaranteed ASR accuracy across all environments
+
+## Release safety
+
+Before and after public release, confirm:
+
+- no raw audio committed
+- no private transcripts committed
+- no generated evidence directories committed
+- no secrets committed
+- no private core modules committed
+- CI remains green
+- rollback plan is available
 
 ## Recommended decision
 
 Controlled technical review: GO  
 Private portfolio review: GO  
-Public Alpha Candidate: GO  
-Public announcement: HOLD until maintainer approval
+Public Alpha repository publication: GO  
+Production release: NO
