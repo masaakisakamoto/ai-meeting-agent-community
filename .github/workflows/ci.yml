@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - public-alpha-candidate-v2.2
+      - public-alpha-release-unlock-v2.2
   pull_request:
 
 jobs:
@@ -61,7 +62,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Avoid CI self-matches by excluding this workflow file from leak-pattern scans.
           SEARCH_PATHS=(-- . ':(exclude).github/workflows/ci.yml')
 
           if git grep -n -E '/Users/[A-Za-z0-9._-]+' "${SEARCH_PATHS[@]}"; then
@@ -93,24 +93,9 @@ jobs:
           assert data.get("private_core_included") is False or "private_core_included" not in data, data
           PY
 
-      - name: Publication gate must remain on hold
+      - name: Publication policy preflight
         run: |
-          PYTHONPATH=src python -m meeting_agent publication-gate \
-            --root . \
-            --out-json publication_gate.json \
-            --out-md publication_gate.md
-
-          python - <<'PY'
-          import json
-          data = json.load(open("publication_gate.json"))
-          assert data["status"] == "hold", data
-          assert "public_github_repository" in data.get("blocked_modes", []), data
-          assert data.get("private_core_included") is False, data
-          PY
-
-      - name: Public unlock preflight must remain on HOLD
-        run: |
-          bash scripts/public_unlock_preflight.sh
+          bash scripts/publication_policy_preflight.sh
 
       - name: Private alpha gate
         run: |

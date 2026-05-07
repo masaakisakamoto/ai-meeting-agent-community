@@ -2,15 +2,15 @@
 
 ## Current decision
 
-Public Alpha Candidate: GO  
+Public Alpha repository publication: GO  
 Controlled technical review: GO  
-Public release: HOLD
+Production release: NO
 
-Do not make the repository public until the maintainer explicitly approves the unlock.
+This project is now prepared for Public Alpha repository publication, but it is not production-ready.
 
 ## Public positioning
 
-AI Meeting Agent Community is a local-first Public Alpha Candidate for experimenting with:
+AI Meeting Agent Community is a local-first Public Alpha for experimenting with:
 
 - evidence-linked meeting minutes
 - transcript ingestion
@@ -22,13 +22,11 @@ AI Meeting Agent Community is a local-first Public Alpha Candidate for experimen
 - Desktop Alpha / local Bridge
 - public/private core separation
 
-This is not a production meeting recorder.
-
 ## What to say publicly
 
 Safe public description:
 
-> AI Meeting Agent Community is a local-first Public Alpha Candidate for evidence-linked meeting minutes, audio diagnostics, controlled microphone alpha workflows, and local ASR validation.
+> AI Meeting Agent Community is a local-first Public Alpha for evidence-linked meeting minutes, audio diagnostics, controlled microphone alpha workflows, and local ASR validation.
 
 Safe short tagline:
 
@@ -48,7 +46,7 @@ Do not claim:
 
 ## Known limitations to mention
 
-- Public Alpha Candidate only
+- Public Alpha only
 - no signed native installer yet
 - no system audio loopback capture yet
 - ASR quality depends on local hardware, microphone, room noise, and model choice
@@ -63,54 +61,9 @@ Recommended demo sequence:
 1. Show README status block.
 2. Show Desktop Alpha / local Bridge UI.
 3. Show evidence-linked ASR → Minutes HTML.
-4. Show `publication-gate = hold`.
-5. Show `docs/PRIVATE_CORE_BOUNDARIES.md`.
-6. Explain that raw audio and generated evidence are not committed.
-7. Explain known limitations clearly.
-
-## Screenshot set
-
-Minimum launch-quality screenshots:
-
-1. Desktop Alpha UI / Bridge
-2. ASR → Minutes HTML
-3. Maintainer / evidence dashboard or release gate view
-
-Do not include screenshots that expose raw meeting data, private transcripts, secrets, or private paths.
-
-## Public announcement draft
-
-Japanese:
-
-> AI Meeting Agent Community の Public Alpha Candidate を準備しています。  
-> ローカルファーストで、証跡つき議事録、音声診断、実マイクAlpha検証、faster-whisperによるローカルASR、Desktop Alpha / local Bridgeを試せるOSS候補です。  
-> まだ本番用の会議録音ツールではありません。署名済みインストーラー、system audio loopback、本番品質の日本語補正エンジン、Enterprise機能は含めていません。  
-> Community Editionとして公開できる範囲に限定し、Private Quality Engineは分離しています。
-
-English:
-
-> I’m preparing the Public Alpha Candidate for AI Meeting Agent Community.  
-> It is a local-first experimental AI meeting assistant for evidence-linked minutes, audio diagnostics, controlled microphone alpha workflows, faster-whisper local ASR validation, and Desktop Alpha / local Bridge workflows.  
-> It is not a production meeting recorder yet. It does not include a signed installer, system audio loopback, production Japanese Quality Engine, or enterprise compliance stack.  
-> The Community Edition is intentionally open-core-ready while keeping the highest-value private quality components separate.
-
-## Final unlock checklist
-
-Before public unlock:
-
-- [ ] README has been reviewed in GitHub UI.
-- [ ] SECURITY.md has been reviewed.
-- [ ] PRIVACY.md has been reviewed.
-- [ ] THIRD_PARTY_NOTICES.md has been reviewed.
-- [ ] LICENSE / NOTICE / TRADEMARK have been reviewed.
-- [ ] main CI is green.
-- [ ] public-alpha-candidate-v2.2 CI is green.
-- [ ] `scripts/public_unlock_preflight.sh` passes.
-- [ ] No raw audio/media files are tracked.
-- [ ] No generated evidence directories are tracked.
-- [ ] No private core code is tracked.
-- [ ] Publication policy is intentionally updated by the maintainer.
-- [ ] Repository visibility is intentionally changed by the maintainer.
+4. Show `docs/PRIVATE_CORE_BOUNDARIES.md`.
+5. Explain that raw audio and generated evidence are not committed.
+6. Explain known limitations clearly.
 
 ## Rollback plan
 
@@ -119,6 +72,6 @@ If a problem is found after public unlock:
 1. Make the repository private again if sensitive data is exposed.
 2. Remove any exposed sensitive material.
 3. Rotate any exposed credentials.
-4. Re-run release-check, publication-gate, and CI.
+4. Re-run release-check and CI.
 5. Publish a correction if an announcement was already made.
 6. Re-review private core boundaries.
