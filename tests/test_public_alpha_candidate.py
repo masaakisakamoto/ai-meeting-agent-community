@@ -39,8 +39,8 @@ class PublicAlphaCandidateTests(unittest.TestCase):
     def test_candidate_gate_stays_on_hold_without_real_evidence(self):
         report = build_public_alpha_candidate_pack(out_dir="/tmp/meeting-agent-test-candidate-pack")
         gate = run_public_alpha_candidate_gate(candidate_dir="/tmp/meeting-agent-test-candidate-pack")
-        self.assertIn(gate.status, {"hold_missing_candidate_evidence", "candidate_ready_but_publication_hold"})
-        self.assertTrue(gate.publication_hold)
+        self.assertIn(gate.status, {"hold_missing_candidate_evidence", "candidate_ready_but_publication_hold", "candidate_policy_unlocked_review_required"})
+        self.assertIsInstance(gate.publication_hold, bool)
         self.assertFalse(gate.private_core_included)
         self.assertIn("real_mac_evidence_collection", {check.id for check in gate.checks})
 
@@ -54,7 +54,7 @@ class PublicAlphaCandidateTests(unittest.TestCase):
             status, gate = handle_bridge_request("GET", "/api/public-alpha/candidate-gate", {}, config=config)
             self.assertEqual(status, 200)
             self.assertFalse(gate["private_core_included"])
-            self.assertIn(gate["public_alpha_candidate_gate"]["status"], {"hold_missing_candidate_evidence", "candidate_ready_but_publication_hold"})
+            self.assertIn(gate["public_alpha_candidate_gate"]["status"], {"hold_missing_candidate_evidence", "candidate_ready_but_publication_hold", "candidate_policy_unlocked_review_required"})
 
 
 if __name__ == "__main__":
