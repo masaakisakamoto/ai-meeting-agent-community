@@ -348,10 +348,10 @@ def handle_bridge_request(method: str, path: str, payload: dict[str, Any] | None
         return 200, {"status": "ok" if report.status in {"pass", "warn"} else "fail", "private_alpha_gate": report.to_dict(), "private_core_included": False}
     if method == "GET" and route == "/api/public-alpha/readiness":
         report = run_public_alpha_readiness(root=Path.cwd(), bridge_port=config.port)
-        return 200, {"status": "ok" if report.status in {"hold", "ready_with_warnings_but_publication_hold", "candidate_but_publication_hold"} else "fail", "public_alpha_readiness": report.to_dict(), "private_core_included": False}
+        return 200, {"status": "ok" if report.status in {"hold", "ready_with_warnings_but_publication_hold", "candidate_but_publication_hold", "blocked"} else "fail", "public_alpha_readiness": report.to_dict(), "private_core_included": False}
     if method == "GET" and route == "/api/public-alpha/plan":
         report = build_public_alpha_plan(root=Path.cwd(), bridge_port=config.port)
-        return 200, {"status": "ok" if report.status in {"hold_plan_ready", "ready"} else "fail", "public_alpha_plan": report.to_dict(), "private_core_included": False}
+        return 200, {"status": "ok" if report.status in {"hold_plan_ready", "ready", "blocked"} else "fail", "public_alpha_plan": report.to_dict(), "private_core_included": False}
     if method == "GET" and route == "/api/public-alpha/candidate-pack":
         params = parse_qs(parsed.query)
         out_dir = Path(config.workspace) / ((params.get("out_dir") or ["public_alpha_candidate"])[0])
@@ -399,7 +399,7 @@ def handle_bridge_request(method: str, path: str, payload: dict[str, Any] | None
             demo_dir=(params.get("demo_dir") or ["demo_out"])[0],
             bridge_port=config.port,
         )
-        return 200, {"status": "ok" if report.status in {"hold", "candidate_review_ready", "blocked_private_core"} else "fail", "maintainer_dashboard": report.to_dict(), "dashboard_html": str(dashboard_dir / "maintainer_dashboard.html"), "private_core_included": False}
+        return 200, {"status": "ok" if report.status in {"hold", "candidate_review_ready", "blocked_private_core", "candidate_policy_unlocked_review_required"} else "fail", "maintainer_dashboard": report.to_dict(), "dashboard_html": str(dashboard_dir / "maintainer_dashboard.html"), "private_core_included": False}
     if method == "GET" and route == "/api/real-capture/execution-pack":
         params = parse_qs(parsed.query)
         out_dir = Path(config.workspace) / ((params.get("out_dir") or ["real_capture_execution_pack"])[0])

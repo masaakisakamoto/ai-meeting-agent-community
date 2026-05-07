@@ -76,7 +76,18 @@ def run_private_alpha_gate(*, root: str | Path = ".", run_tests: bool = False, b
     checks.append(PrivateAlphaCheck("release_check", release.status, f"release-check status={release.status} score={release.score}", {"score": release.score}))
     publication = run_publication_gate(root=root)
     pub_ok = publication.status == "hold"
-    checks.append(PrivateAlphaCheck("publication_hold", "pass" if pub_ok else "fail", "Publication gate is intentionally on hold." if pub_ok else "Publication gate is not on hold; do not proceed with private alpha handoff.", {"status": publication.status}))
+    pub_unlocked = publication.status == "ready"
+    publication_check_status = "pass" if pub_ok else ("warn" if pub_unlocked else "fail")
+    publication_detail = (
+        "Publication gate is intentionally on hold."
+        if pub_ok
+        else (
+            "Publication gate is intentionally unlocked for Public Alpha; private-alpha gate is advisory only."
+            if pub_unlocked
+            else "Publication gate is not on hold; do not proceed with private alpha handoff."
+        )
+    )
+    checks.append(PrivateAlphaCheck("publication_hold", publication_check_status, publication_detail, {"status": publication.status}))
     desktop = run_desktop_package_check(root)
     checks.append(PrivateAlphaCheck("desktop_package", desktop.status, f"desktop-package-check status={desktop.status} score={desktop.score}", {"score": desktop.score}))
     env = run_dev_environment_doctor(root=root, bridge_port=bridge_port)
@@ -142,6 +153,8 @@ def _score(checks: list[PrivateAlphaCheck]) -> float:
 
 
 def _recommendation(status: str, env_status: str, publication_status: str) -> str:
+    if publication_status == "ready":
+        return "Publication is intentionally unlocked for Public Alpha. Treat private-alpha gate as advisory and continue using release/preflight checks."
     if publication_status != "hold":
         return "Stop. Restore publication hold before any private alpha handoff."
     if status == "pass":

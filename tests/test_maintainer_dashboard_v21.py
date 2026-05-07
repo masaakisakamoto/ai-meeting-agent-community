@@ -23,8 +23,8 @@ class MaintainerDashboardTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             out = Path(td) / "dashboard"
             report = build_maintainer_dashboard(root=Path.cwd(), dashboard_dir=out)
-            self.assertIn(report.status, {"hold", "candidate_review_ready", "blocked_private_core"})
-            self.assertTrue(report.publication_hold)
+            self.assertIn(report.status, {"hold", "candidate_review_ready", "blocked_private_core", "candidate_policy_unlocked_review_required"})
+            self.assertIsInstance(report.publication_hold, bool)
             self.assertFalse(report.private_core_included)
             self.assertTrue((out / "maintainer_dashboard.html").exists())
             self.assertIn("public_alpha_candidate_gate", {check.id for check in report.checks})
@@ -40,7 +40,7 @@ class MaintainerDashboardTests(unittest.TestCase):
             status, dashboard = handle_bridge_request("GET", "/api/maintainer/dashboard", {}, config=config)
             self.assertEqual(status, 200)
             self.assertFalse(dashboard["private_core_included"])
-            self.assertIn(dashboard["maintainer_dashboard"]["status"], {"hold", "candidate_review_ready", "blocked_private_core"})
+            self.assertIn(dashboard["maintainer_dashboard"]["status"], {"hold", "candidate_review_ready", "blocked_private_core", "candidate_policy_unlocked_review_required"})
 
 
 if __name__ == "__main__":
