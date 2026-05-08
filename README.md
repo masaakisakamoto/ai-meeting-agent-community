@@ -20,7 +20,10 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 
 ---
 
-## Features included in this source bundle
+## Feature history and current capabilities
+
+> Note: Older entries below describe private-development milestones. Some historical items mention publication hold or private review because that was the state at that development stage. The current repository status is Public Alpha.
+
 
 
 ### v2.2 additions
@@ -30,7 +33,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - Screenshot Automation Pack and Screenshot Readiness Gate for public-alpha screenshot planning.
 - Desktop Bridge routes for `/api/evidence/export-*` and `/api/screenshots/*`.
 - Desktop UI controls for Screenshot Pack/Gate and Evidence Export Pack/Run/Gate.
-- Publication remains on hold; this version prepares launch evidence but does not publish.
+- Historical note: publication remained on hold during this stage; this version prepares launch evidence but does not publish.
 
 ### v2.1 additions
 
@@ -39,15 +42,15 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - `maintainer-dashboard` / `maintainer-review-gate` CLI to build a private HTML/Markdown/JSON evidence dashboard.
 - Desktop Bridge routes for `/api/maintainer/review-pack` and `/api/maintainer/dashboard`.
 - Desktop UI controls for Maintainer Pack and Maintainer Dashboard.
-- Publication remains on hold; this version is a private maintainer review workflow, not a public release.
+- Historical note: publication remained on hold during this stage; this version is a private maintainer review workflow, not a public release.
 ### v2.0 additions
 
 - Public Alpha Candidate Pack for private maintainer review without publishing.
 - `public-alpha-candidate-pack` CLI to generate candidate README, final unlock checklist, release notes draft, rollback plan, security/privacy review, and scripts.
-- `public-alpha-candidate-gate` CLI to evaluate final candidate readiness while publication remains on hold.
+- `public-alpha-candidate-gate` CLI to evaluate final candidate readiness while publication remained on hold during that stage.
 - Desktop Bridge routes for `/api/public-alpha/candidate-pack` and `/api/public-alpha/candidate-gate`.
 - Desktop UI controls for Candidate Pack and Candidate Gate.
-- Publication remains on hold; this is a private candidate workflow, not a public release.
+- Historical note: publication remained on hold during this stage; this is a private candidate workflow, not a public release.
 
 ### v1.9 additions
 
@@ -65,14 +68,14 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - `launch-polish-check` CLI to verify README expectations, generated launch assets, demo HTML, Desktop Alpha UI, and publication hold state.
 - Desktop Bridge routes for `/api/launch/assets-pack` and `/api/launch/polish-check`.
 - Desktop UI controls for Launch Assets and Launch Polish.
-- Publication remains on hold; launch materials are private drafts only.
+- Historical note: publication remained on hold during this stage; launch materials are private drafts only.
 
 ### v1.7 additions
 
 - Local ASR smoke pack/run/gate for captured WAVs.
 - Bridge/UI routes for local ASR smoke validation.
 - Public Alpha Readiness now tracks local-ASR smoke evidence separately from deterministic sidecar checks.
-- Publication remains on hold and private core is still excluded.
+- Historical note: publication remained on hold during this stage, and private core remained excluded.
 
 ### v1.6 additions
 
@@ -81,7 +84,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - `real-capture-execution-gate` CLI to evaluate live-capture evidence: safety gate, audit events, `audio.wav`, audio diagnostics, post-capture minutes, and ASR-to-minutes artifacts.
 - Desktop Bridge routes for `/api/real-capture/execution-pack` and `/api/real-capture/execution-gate`.
 - Desktop UI controls for Real Capture Pack and Real Capture Gate.
-- Publication remains on hold; this version is still Private Developer Preview only.
+- Historical note: publication remained on hold during this stage; this version was still a private developer-preview milestone only.
 
 ### v1.5 additions
 
@@ -90,7 +93,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - `public-alpha-plan` CLI to generate the private version path toward public alpha.
 - Desktop Bridge routes for `/api/public-alpha/readiness` and `/api/public-alpha/plan`.
 - Desktop UI controls for Public Alpha Gate and Public Plan.
-- Publication gate remains on hold; no public GitHub, SNS, landing page, or public blog announcement yet.
+- Historical note: publication gate remained on hold during this stage; no public GitHub, SNS, landing page, or public blog announcement yet.
 
 ### v1.4 additions
 
@@ -114,7 +117,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - `capture-validation-run` CLI to validate live-capture artifacts, safety gate, audit log, audio quality, and post-capture minutes.
 - Desktop Bridge routes for `/api/capture/validation-pack` and `/api/capture/validation-run`.
 - Desktop UI controls for Validation Pack and Validate Capture.
-- Publication gate remains on hold; no public OSS release or announcement yet.
+- Historical note: publication gate remained on hold during this stage; no public OSS release or announcement yet.
 
 ### v1.1 additions
 
@@ -123,7 +126,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - Audio diagnostics, level meter, sidecar/local-ASR transcription, evidence-linked minutes, HTML, CSV, replay events, and Desktop Lite bundle from a captured microphone WAV.
 - Desktop Bridge routes for `/api/post-capture/gate` and `/api/workflows/microphone-to-minutes`.
 - UI controls for Post Capture Gate and Mic → Minutes.
-- Publication gate remains on hold; no public OSS release or announcement yet.
+- Historical note: publication gate remained on hold during this stage; no public OSS release or announcement yet.
 
 ### v1.0 additions
 
@@ -139,7 +142,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - Explicit confirmation, recording notice acknowledgement, and participant-notification checks before opening a real microphone.
 - Local audit trail and recording notice artifacts for microphone alpha workflows.
 - Desktop Bridge route for `/api/recording/safety-gate`.
-- Publication gate remains on hold until the maintainer explicitly flips the policy.
+- Historical note: publication gate remained on hold during this stage until explicit maintainer approval.
 
 ### v0.8 additions
 
@@ -149,7 +152,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 - Desktop Bridge microphone doctor and microphone alpha dry-run routes
 - Desktop UI controls for Mic Doctor and Mic Alpha Dry Run
 - Python 3.12-oriented microphone setup guide
-- Publication gate remains on hold until public announcement criteria are met
+- Historical note: publication gate remained on hold during this stage until public announcement criteria were met.
 
 ### v0.7 additions
 
@@ -556,16 +559,15 @@ This is not legal advice. For commercial usage, review all third-party dependenc
 
 ## Launch asset preview
 
-Publication is intentionally on hold. To prepare launch materials privately:
+Public Alpha repository publication is now unlocked. The launch-asset workflows remain useful for preparing screenshots, release notes, demo scripts, and final announcement material:
 
 ```bash
 PYTHONPATH=src python3 -m meeting_agent launch-assets-pack --out-dir launch_assets
 PYTHONPATH=src python3 -m meeting_agent launch-readiness-gate --root . --launch-assets-dir launch_assets
 ```
 
-Do not create a public GitHub repository, SNS announcement, commercial landing page, or public release blog until `publication-gate` is explicitly changed by the maintainer and all real microphone / local ASR gates pass.
+SNS announcements, commercial landing pages, and public release blogs remain separately blocked unless explicitly approved.
 
+## v2.1 Historical private review milestone
 
-## v2.1 Private Developer Preview
-
-Adds Public Alpha Candidate Pack and Candidate Gate for private pre-launch review. Publication remains on hold until maintainer approval, real Mac evidence, local ASR smoke, screenshots, and final README review are complete.
+Historical note: this milestone added the Public Alpha Candidate Pack and Candidate Gate for private pre-launch review. Publication remained on hold at that stage until maintainer approval, real Mac evidence, local ASR smoke, screenshots, and final README review were complete.
