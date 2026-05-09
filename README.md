@@ -20,6 +20,73 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 
 ---
 
+## Try it in 5 minutes
+
+This is the safest first run. It uses deterministic demo data and does **not** open a microphone.
+
+```bash
+python3 -m venv /tmp/ai-meeting-agent-demo-venv
+source /tmp/ai-meeting-agent-demo-venv/bin/activate
+
+python -m pip install -U pip setuptools wheel
+python -m pip install -e .
+
+PYTHONPATH=src python -m meeting_agent demo --out-dir demo_out
+
+open demo_out/minutes.html
+```
+
+Expected output:
+
+- `demo_out/meeting.json`
+- `demo_out/minutes.json`
+- `demo_out/minutes.md`
+- `demo_out/minutes.html`
+- `demo_out/verification.json`
+
+## Safe demo policy
+
+The default demo workflow does not record real audio.
+
+Do not commit:
+
+- raw audio
+- private transcripts
+- generated evidence directories
+- credentials
+- private Quality Engine code
+- private evaluation datasets
+
+If you use microphone workflows, notify participants and obtain appropriate consent before recording.
+
+## Optional local checks
+
+```bash
+PYTHONPATH=src python -m meeting_agent release-check --root .
+PYTHONPATH=src python -m meeting_agent publication-gate --root .
+PYTHONPATH=src python -m unittest discover -s tests -v
+```
+
+## Optional Desktop Alpha
+
+```bash
+PYTHONPATH=src python -m meeting_agent demo --out-dir demo_out
+
+PYTHONPATH=src python -m meeting_agent desktop-bridge \
+  --workspace demo_out/desktop_alpha \
+  --port 8765 \
+  --open-browser
+```
+
+Open:
+
+```text
+http://127.0.0.1:8765/
+```
+
+Desktop Alpha is a local Bridge/UI preview, not a signed native desktop installer.
+
+
 ## Feature history and current capabilities
 
 > Note: Older entries below describe private-development milestones. Some historical items mention publication hold or private review because that was the state at that development stage. The current repository status is Public Alpha.
