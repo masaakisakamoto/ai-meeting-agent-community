@@ -1,0 +1,5 @@
+# Public Preview Assets
+
+This directory is for curated, public-safe images used in README or documentation.
+
+Do not place private evidence, raw meeting data, private transcripts, credentials, local paths, or private Quality Engine details here.
