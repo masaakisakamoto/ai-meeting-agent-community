@@ -4,7 +4,7 @@
   "current_stage": "public_alpha",
   "public_oss_announcement_allowed": true,
   "target_public_stage": "public_alpha",
-  "hold_reason": "Public Alpha repository publication has been intentionally unlocked by the maintainer.",
+  "hold_reason": "Public Alpha repository publication and Japanese short external announcement have been intentionally unlocked by the maintainer. Commercial landing page, public release blog, and production release claims remain blocked.",
   "allowed_modes": [
     "local_development",
     "private_repository",
@@ -12,10 +12,11 @@
     "controlled_technical_review",
     "private_alpha_hardware_validation",
     "public_github_repository",
-    "public_alpha_release"
+    "public_alpha_release",
+    "sns_announcement",
+    "external_announcement_ja_short"
   ],
   "blocked_modes": [
-    "sns_announcement",
     "commercial_landing_page",
     "public_release_blog"
   ],
