@@ -88,3 +88,13 @@ Suggested section title:
 Visual assets are planned, but not required for the current Public Alpha prerelease.
 
 SNS announcement remains on hold until the README visual assets are reviewed.
+
+## Current public-safe preview assets
+
+The current README preview assets are:
+
+- `docs/assets/public-preview/local-first-workflow.svg`
+- `docs/assets/public-preview/evidence-linked-minutes.svg`
+- `docs/assets/public-preview/release-safety-checks.svg`
+
+These are generated public-safe diagrams, not screenshots of private evidence.
