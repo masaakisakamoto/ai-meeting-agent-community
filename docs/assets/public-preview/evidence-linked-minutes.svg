@@ -1,22 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-  <rect width="1200" height="675" fill="#0b1020"/>
-  <circle cx="1020" cy="120" r="180" fill="#1f2937" opacity="0.45"/>
-  <circle cx="180" cy="560" r="220" fill="#111827" opacity="0.55"/>
-  <rect x="48" y="48" width="1104" height="579" rx="34" fill="#0f172a" stroke="#334155" stroke-width="2"/>
-  <text x="80" y="105" font-size="42" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" fill="#f8fafc" font-weight="700">Evidence-linked Minutes</text>
-  <text x="82" y="142" font-size="22" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" fill="#94a3b8">Meeting notes grounded in transcript evidence</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420" role="img" aria-label="Evidence-linked minutes">
+  <rect width="100%" height="100%" rx="28" fill="#f7f9fc"/>
+  <rect x="24" y="24" width="952" height="372" rx="24" fill="#ffffff" stroke="#e5e7eb"/>
+  <text x="60" y="86" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800" fill="#101828">Evidence-linked minutes</text>
+  <text x="60" y="126" font-family="Inter, Arial, sans-serif" font-size="18" fill="#667085">Decisions, actions, risks, and questions stay connected to source segments.</text>
   
-  <rect x="80" y="150" width="1040" height="66" rx="18" fill="#111827" stroke="#2f3a4f"/>
-  <text x="116" y="191" font-size="24" fill="#e5e7eb">Transcript ingestion</text>
+  <line x1="288" y1="233.0" x2="300" y2="233.0" stroke="#667085" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="300,233.0 290,226.0 290,240.0" fill="#667085"/>
 
-  <rect x="80" y="236" width="1040" height="66" rx="18" fill="#111827" stroke="#2f3a4f"/>
-  <text x="116" y="277" font-size="24" fill="#e5e7eb">Decision / action item extraction</text>
+  <line x1="528" y1="233.0" x2="540" y2="233.0" stroke="#667085" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="540,233.0 530,226.0 530,240.0" fill="#667085"/>
 
-  <rect x="80" y="322" width="1040" height="66" rx="18" fill="#111827" stroke="#2f3a4f"/>
-  <text x="116" y="363" font-size="24" fill="#e5e7eb">Evidence references for review</text>
+  <line x1="768" y1="233.0" x2="780" y2="233.0" stroke="#667085" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="780,233.0 770,226.0 770,240.0" fill="#667085"/>
 
-  <rect x="80" y="408" width="1040" height="66" rx="18" fill="#111827" stroke="#2f3a4f"/>
-  <text x="116" y="449" font-size="24" fill="#e5e7eb">Markdown, HTML, JSON, and CSV outputs</text>
+  
+  <rect x="70" y="190" width="210" height="86" rx="18" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="175.0" y="232" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#172033">Segment</text>
 
-  <text x="80" y="605" font-size="18" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" fill="#64748b">AI Meeting Agent Community / Public Alpha</text>
+  <rect x="310" y="190" width="210" height="86" rx="18" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="415.0" y="232" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#172033">Decision</text>
+
+  <rect x="550" y="190" width="210" height="86" rx="18" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="655.0" y="232" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#172033">Action</text>
+
+  <rect x="790" y="190" width="210" height="86" rx="18" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="895.0" y="232" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#172033">Verifier</text>
+
+  <text x="60" y="360" font-family="Inter, Arial, sans-serif" font-size="15" fill="#667085">Public Alpha preview. Safe demo data only. Private Quality Engine is not included.</text>
 </svg>
