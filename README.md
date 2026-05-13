@@ -87,6 +87,16 @@ http://127.0.0.1:8765/
 Desktop Alpha is a local Bridge/UI preview, not a signed native desktop installer.
 
 
+## Public Alpha preview
+
+These visuals are public-safe diagrams, not screenshots from private meetings.
+
+![Desktop Alpha / Local Bridge](docs/assets/public-preview/desktop-alpha-bridge.svg)
+
+![Evidence-linked Minutes](docs/assets/public-preview/evidence-linked-minutes.svg)
+
+![Release Safety Checks](docs/assets/public-preview/release-safety-checks.svg)
+
 ## Feature history and current capabilities
 
 > Note: Older entries below describe private-development milestones. Some historical items mention publication hold or private review because that was the state at that development stage. The current repository status is Public Alpha.
