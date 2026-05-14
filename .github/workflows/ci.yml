@@ -97,6 +97,14 @@ jobs:
         run: |
           bash scripts/publication_policy_preflight.sh
 
+      - name: External announcement preflight
+        run: |
+          if [ -x scripts/external_announcement_preflight.sh ]; then
+            bash scripts/external_announcement_preflight.sh
+          else
+            echo "external announcement preflight not present; skipping"
+          fi
+
       - name: Private alpha gate
         run: |
           PYTHONPATH=src python -m meeting_agent private-alpha-gate --root .
