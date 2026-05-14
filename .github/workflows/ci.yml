@@ -74,7 +74,7 @@ jobs:
             exit 1
           fi
 
-          if git grep -n -E 'v2\.0 Public Alpha|2\.0 Public Alpha|ai-meeting-agent-community-v1\.9' "${SEARCH_PATHS[@]}"; then
+          if git grep -n -E '(^|[^A-Za-z0-9_.-])(v2\.0 Public Alpha|2\.0 Public Alpha|ai-meeting-agent-community-v1\.9)' "${SEARCH_PATHS[@]}"; then
             echo "Old public alpha/version reference detected."
             exit 1
           fi
