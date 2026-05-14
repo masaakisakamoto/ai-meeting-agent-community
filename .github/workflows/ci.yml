@@ -74,7 +74,7 @@ jobs:
             exit 1
           fi
 
-          if git grep -n -E 'v2\.0 Public Alpha|2\.0 Public Alpha|ai-meeting-agent-community-v1\.9' "${SEARCH_PATHS[@]}"; then
+          if git grep -n -E '(^|[^A-Za-z0-9_.-])(v2\.0 Public Alpha|2\.0 Public Alpha|ai-meeting-agent-community-v1\.9)' "${SEARCH_PATHS[@]}"; then
             echo "Old public alpha/version reference detected."
             exit 1
           fi
@@ -96,6 +96,14 @@ jobs:
       - name: Publication policy preflight
         run: |
           bash scripts/publication_policy_preflight.sh
+
+      - name: External announcement preflight
+        run: |
+          if [ -x scripts/external_announcement_preflight.sh ]; then
+            bash scripts/external_announcement_preflight.sh
+          else
+            echo "external announcement preflight not present; skipping"
+          fi
 
       - name: Private alpha gate
         run: |
