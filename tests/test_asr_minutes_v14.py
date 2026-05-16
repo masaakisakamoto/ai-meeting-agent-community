@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -59,6 +60,131 @@ class ASRMinutesV14Tests(unittest.TestCase):
             self.assertEqual(payload["workflow"]["id"], "asr-to-minutes")
             self.assertFalse(payload["private_core_included"])
             self.assertIn("asr_minutes", payload)
+
+    def test_asr_to_minutes_workflow_with_correction_glossary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            provider = SimulatedAudioCaptureProvider(total_ms=1000)
+            config = AudioCaptureConfig(device_id="simulated:microphone", sample_rate_hz=16000, channels=1, chunk_ms=250)
+            audio = root / "audio.wav"
+            write_wav_from_chunks(list(provider.capture(config, session_id="asr_correction_workflow")), audio)
+
+            sidecar = root / "audio.transcript.txt"
+            sidecar.write_text(
+                "[00:00:00 - 00:00:01] 話者: パブリックアルファの確認をします。\n",
+                encoding="utf-8",
+            )
+
+            reference = root / "reference.txt"
+            reference.write_text(
+                "[00:00:00 - 00:00:01] 話者: Public Alphaの確認をします。\n",
+                encoding="utf-8",
+            )
+
+            glossary = root / "glossary.json"
+            glossary.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "test/v1",
+                        "entries": [
+                            {
+                                "canonical": "Public Alpha",
+                                "variants": ["パブリックアルファ"],
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            out = root / "asr_minutes_corrected"
+            report = run_asr_to_minutes_workflow(
+                audio_path=audio,
+                out_dir=out,
+                provider="sidecar",
+                sidecar_path=sidecar,
+                reference_path=reference,
+                correction_glossary=glossary,
+                generate_corrected_minutes=True,
+            )
+
+            self.assertIn(report.status, {"pass", "warn"})
+            self.assertFalse(report.private_core_included)
+            metrics = json.loads((out / "post_correction" / "metrics.json").read_text(encoding="utf-8"))
+            self.assertLess(metrics["normalized_ja_cer_after"], metrics["normalized_ja_cer_before"])
+            self.assertTrue((out / "post_correction" / "transcript.corrected.json").exists())
+            self.assertIn("Public Alpha", (out / "meeting_from_asr.json").read_text(encoding="utf-8"))
+            self.assertTrue(report.summary["asr_post_correction_enabled"])
+            self.assertTrue(report.summary["asr_corrected_minutes_generated"])
+
+    def test_cli_asr_to_minutes_with_correction_glossary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            provider = SimulatedAudioCaptureProvider(total_ms=1000)
+            config = AudioCaptureConfig(device_id="simulated:microphone", sample_rate_hz=16000, channels=1, chunk_ms=250)
+            audio = root / "audio.wav"
+            write_wav_from_chunks(list(provider.capture(config, session_id="asr_cli_correction")), audio)
+
+            sidecar = root / "audio.transcript.txt"
+            sidecar.write_text(
+                "[00:00:00 - 00:00:01] 話者: パブリックアルファの確認をします。\n",
+                encoding="utf-8",
+            )
+
+            reference = root / "reference.txt"
+            reference.write_text(
+                "[00:00:00 - 00:00:01] 話者: Public Alphaの確認をします。\n",
+                encoding="utf-8",
+            )
+
+            glossary = root / "glossary.json"
+            glossary.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "test/v1",
+                        "entries": [
+                            {
+                                "canonical": "Public Alpha",
+                                "variants": ["パブリックアルファ"],
+                            }
+                        ],
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+
+            out = root / "cli_asr_minutes_corrected"
+            code = main(
+                [
+                    "asr-to-minutes",
+                    "--audio-path",
+                    str(audio),
+                    "--provider",
+                    "sidecar",
+                    "--sidecar",
+                    str(sidecar),
+                    "--reference",
+                    str(reference),
+                    "--correction-glossary",
+                    str(glossary),
+                    "--generate-corrected-minutes",
+                    "--out-dir",
+                    str(out),
+                ]
+            )
+
+            self.assertEqual(code, 0)
+            metrics = json.loads((out / "post_correction" / "metrics.json").read_text(encoding="utf-8"))
+            self.assertLess(metrics["normalized_ja_cer_after"], metrics["normalized_ja_cer_before"])
+            self.assertTrue((out / "post_correction" / "transcript.corrected.json").exists())
+            self.assertIn("Public Alpha", (out / "meeting_from_asr.json").read_text(encoding="utf-8"))
+            self.assertTrue((out / "minutes.html").exists())
 
 
 if __name__ == "__main__":

@@ -632,6 +632,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--device", default="cpu")
     p.add_argument("--compute-type", default="int8")
     p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--correction-glossary", default=None, help="Optional public-safe ASR correction glossary JSON")
+    p.add_argument("--generate-corrected-minutes", action="store_true", help="Generate minutes from the corrected ASR transcript")
     p.add_argument("--out-json", default=None)
     p.add_argument("--out-md", default=None)
 
@@ -1439,6 +1441,8 @@ def _main_impl(argv: list[str] | None = None) -> int:
             device=args.device,
             compute_type=args.compute_type,
             dry_run=args.dry_run,
+            correction_glossary=args.correction_glossary,
+            generate_corrected_minutes=args.generate_corrected_minutes,
         )
         if args.out_json or args.out_md:
             write_asr_minutes_report(report, out_json=args.out_json, out_md=args.out_md)
