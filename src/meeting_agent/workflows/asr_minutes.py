@@ -16,6 +16,12 @@ from meeting_agent.quality.gates import run_minutes_quality_gate, write_quality_
 from meeting_agent.streaming.replay import write_replay_json, write_replay_ndjson
 from meeting_agent.ui.demo_bundle import build_desktop_lite_bundle
 from meeting_agent.workflows.asr_validation import run_asr_validation, write_asr_validation_run_report
+from meeting_agent.workflows.asr_correction import (
+    correct_transcript_payload,
+    evaluate_correction,
+    load_correction_glossary,
+    transcript_text_from_payload,
+)
 
 
 @dataclass(frozen=True)
@@ -100,6 +106,8 @@ def run_asr_to_minutes_workflow(
     device: str = "cpu",
     compute_type: str = "int8",
     dry_run: bool = False,
+    correction_glossary: str | Path | None = None,
+    generate_corrected_minutes: bool = False,
 ) -> ASRMinutesReport:
     """Run ASR validation and turn the generated transcript into evidence-linked minutes.
 
@@ -175,7 +183,32 @@ def run_asr_to_minutes_workflow(
         _write_report(out, report)
         return report
 
-    transcript = load_transcript(transcript_path)
+    source_transcript_path = transcript_path
+    correction_metrics: dict[str, Any] = {}
+
+    if correction_glossary:
+        source_transcript_path, correction_metrics = _prepare_corrected_transcript(
+            transcript_path=transcript_path,
+            reference_path=Path(reference_path) if reference_path else None,
+            glossary_path=Path(correction_glossary),
+            out_dir=out,
+            use_corrected_transcript=generate_corrected_minutes,
+        )
+        artifacts["post_correction/metrics.json"] = str(out / "post_correction" / "metrics.json")
+        artifacts["post_correction/metrics.md"] = str(out / "post_correction" / "metrics.md")
+        artifacts["post_correction/hypothesis.original.txt"] = str(out / "post_correction" / "hypothesis.original.txt")
+        artifacts["post_correction/hypothesis.corrected.txt"] = str(out / "post_correction" / "hypothesis.corrected.txt")
+        artifacts["post_correction/transcript.corrected.json"] = str(out / "post_correction" / "transcript.corrected.json")
+        checks.append(
+            ASRMinutesCheck(
+                "asr_post_correction",
+                "pass",
+                f"Post-correction evaluated; normalized JA CER {correction_metrics.get('normalized_ja_cer_before')} -> {correction_metrics.get('normalized_ja_cer_after')}.",
+                correction_metrics,
+            )
+        )
+
+    transcript = load_transcript(source_transcript_path)
     save_transcript(transcript, out / "meeting_from_asr.json")
     artifacts["meeting_from_asr.json"] = str(out / "meeting_from_asr.json")
     checks.append(ASRMinutesCheck("transcript", "pass" if transcript.segments else "warn", f"Loaded {len(transcript.segments)} ASR transcript segments."))
@@ -230,6 +263,16 @@ def run_asr_to_minutes_workflow(
         "asr_wer": asr_report.metrics.get("wer"),
         "private_core_included": False,
     }
+    if correction_metrics:
+        summary.update(
+            {
+                "asr_post_correction_enabled": True,
+                "asr_corrected_minutes_generated": bool(generate_corrected_minutes),
+                "normalized_ja_cer_before": correction_metrics.get("normalized_ja_cer_before"),
+                "normalized_ja_cer_after": correction_metrics.get("normalized_ja_cer_after"),
+                "asr_correction_relative_improvement": correction_metrics.get("relative_improvement"),
+            }
+        )
     status = _status(checks)
     recommendation = (
         "ASR transcript has been converted to evidence-linked minutes. Review HTML evidence and CER/WER before relying on the notes."
@@ -239,6 +282,84 @@ def run_asr_to_minutes_workflow(
     report = ASRMinutesReport(status, _score(checks), provider, str(audio), str(out), meeting_id, title, checks, artifacts, asr_report.metrics, summary, recommendation, False)
     _write_report(out, report)
     return report
+
+
+
+def _prepare_corrected_transcript(
+    *,
+    transcript_path: Path,
+    reference_path: Path | None,
+    glossary_path: Path,
+    out_dir: Path,
+    use_corrected_transcript: bool,
+) -> tuple[Path, dict[str, Any]]:
+    post_dir = out_dir / "post_correction"
+    post_dir.mkdir(parents=True, exist_ok=True)
+
+    if not glossary_path.exists():
+        raise FileNotFoundError(f"correction glossary not found: {glossary_path}")
+
+    payload = json.loads(transcript_path.read_text(encoding="utf-8"))
+    glossary = load_correction_glossary(glossary_path)
+
+    corrected_payload, applied = correct_transcript_payload(payload, glossary)
+
+    original_text = transcript_text_from_payload(payload)
+    corrected_text = transcript_text_from_payload(corrected_payload)
+    reference_text = (
+        reference_path.read_text(encoding="utf-8", errors="replace")
+        if reference_path and reference_path.exists()
+        else original_text
+    )
+
+    metrics = evaluate_correction(
+        reference_text=reference_text,
+        original_text=original_text,
+        corrected_text=corrected_text,
+        applied_replacements=applied,
+        glossary_path=glossary_path,
+        use_corrected_transcript=use_corrected_transcript,
+    )
+
+    corrected_path = post_dir / "transcript.corrected.json"
+    corrected_path.write_text(json.dumps(corrected_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (post_dir / "hypothesis.original.txt").write_text(original_text + "\n", encoding="utf-8")
+    (post_dir / "hypothesis.corrected.txt").write_text(corrected_text + "\n", encoding="utf-8")
+    (post_dir / "metrics.json").write_text(json.dumps(metrics, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    lines = [
+        "# ASR Post-correction Metrics",
+        "",
+        f"- Use corrected transcript for minutes: `{str(use_corrected_transcript).lower()}`",
+        f"- Normalized JA CER before: `{metrics['normalized_ja_cer_before']}`",
+        f"- Normalized JA CER after: `{metrics['normalized_ja_cer_after']}`",
+        f"- Absolute improvement: `{metrics['absolute_improvement']}`",
+        f"- Relative improvement: `{metrics['relative_improvement']}`",
+        "",
+        "## Applied replacements",
+        "",
+    ]
+
+    if applied:
+        for item in applied:
+            lines.append(f"- `{item['from']}` → `{item['to']}`")
+    else:
+        lines.append("- None")
+
+    lines.extend(
+        [
+            "",
+            "## Safety",
+            "",
+            "- Public-safe glossary correction only",
+            "- No private Quality Engine code included",
+            "",
+        ]
+    )
+
+    (post_dir / "metrics.md").write_text("\n".join(lines), encoding="utf-8")
+
+    return (corrected_path if use_corrected_transcript else transcript_path), metrics
 
 
 def write_asr_minutes_report(report: ASRMinutesReport, *, out_json: str | Path | None = None, out_md: str | Path | None = None) -> None:
