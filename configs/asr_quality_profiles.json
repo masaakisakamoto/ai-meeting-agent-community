@@ -1,0 +1,35 @@
+{
+  "schema_version": "asr-quality-profiles/v1",
+  "project": "ai-meeting-agent-community",
+  "profiles": {
+    "smoke": {
+      "provider": "faster-whisper",
+      "model_size": "small",
+      "device": "cpu",
+      "purpose": "Fast local smoke test. Not recommended for Japanese accuracy-sensitive workflows."
+    },
+    "balanced": {
+      "provider": "faster-whisper",
+      "model_size": "medium",
+      "device": "cpu",
+      "purpose": "Balanced Public Alpha default candidate for Japanese local ASR when CPU-only runtime is acceptable."
+    },
+    "accuracy": {
+      "provider": "faster-whisper",
+      "model_size": "large-v3",
+      "device": "cpu",
+      "purpose": "Best current local accuracy profile from the first real-mic benchmark. Slow on CPU."
+    },
+    "experimental_japanese": {
+      "provider": "faster-whisper",
+      "model_size": "JhonVanced/faster-whisper-large-v3-ja",
+      "device": "cpu",
+      "purpose": "Experimental Japanese fine-tuned model. Re-evaluate across more samples before recommending."
+    }
+  },
+  "current_recommendation": {
+    "quick_demo": "smoke",
+    "default_quality": "balanced",
+    "accuracy_first": "accuracy"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schema_version": "asr-correction-glossary/v1",
+  "description": "Public-safe example glossary for Japanese ASR post-correction.",
+  "entries": [
+    {
+      "canonical": "Public Alpha",
+      "variants": [
+        "パブリックアルファ",
+        "パブリックアルファー",
+        "パブリックアルパー",
+        "パブリッカパー"
+      ]
+    },
+    {
+      "canonical": "録音",
+      "variants": [
+        "ロコン",
+        "ろこん",
+        "録音ん"
+      ]
+    },
+    {
+      "canonical": "議事録",
+      "variants": [
+        "ギジロク",
+        "ギジロック",
+        "議事ロック"
+      ]
+    },
+    {
+      "canonical": "ローカルASR",
+      "variants": [
+        "ローカラASR",
+        "ロークラASR",
+        "ローカルエーエスアール"
+      ]
+    },
+    {
+      "canonical": "HTML生成",
+      "variants": [
+        "HTML製成",
+        "HTMLせいせい",
+        "エイチティーエムエル生成"
+      ]
+    },
+    {
+      "canonical": "AI会議エージェント",
+      "variants": [
+        "AI会議エージェント",
+        "AI会議エイジェント",
+        "AI会議エージェントン"
+      ]
+    }
+  ]
+}

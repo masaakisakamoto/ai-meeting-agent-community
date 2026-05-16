@@ -82,3 +82,5 @@ release_readiness.md
 screenshot_automation/
 screenshots/
 venv/
+asr_accuracy_runs/
+asr_accuracy_lab/
