@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -79,6 +80,27 @@ def apply_glossary(text: str, glossary: dict[str, Any]) -> tuple[str, list[dict[
     return corrected, applied
 
 
+def run_command(cmd: list[str], log_path: Path) -> tuple[int, float]:
+    env = os.environ.copy()
+    env["PYTHONPATH"] = "src" + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
+
+    started = time.time()
+    proc = subprocess.run(
+        cmd,
+        cwd=Path.cwd(),
+        env=env,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    elapsed_s = round(time.time() - started, 3)
+
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    log_path.write_text(proc.stdout, encoding="utf-8")
+
+    return proc.returncode, elapsed_s
+
+
 def run_asr_to_minutes(
     audio_path: Path,
     reference: Path,
@@ -105,25 +127,46 @@ def run_asr_to_minutes(
         str(out_dir),
     ]
 
-    env = os.environ.copy()
-    env["PYTHONPATH"] = "src" + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
-
-    started = time.time()
-    proc = subprocess.run(
-        cmd,
-        cwd=Path.cwd(),
-        env=env,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-    )
-    elapsed_s = round(time.time() - started, 3)
-
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "asr_post_correction_command.txt").write_text(" ".join(cmd) + "\n", encoding="utf-8")
-    (out_dir / "asr_post_correction_asr_run.log").write_text(proc.stdout, encoding="utf-8")
+    return run_command(cmd, out_dir / "asr_post_correction_asr_run.log")
 
-    return proc.returncode, elapsed_s
+
+def generate_corrected_minutes(
+    audio_path: Path,
+    corrected_transcript: str,
+    out_dir: Path,
+) -> tuple[int, float, Path]:
+    post_dir = out_dir / "post_correction"
+    corrected_mic_dir = post_dir / "corrected_mic"
+    corrected_minutes_dir = post_dir / "corrected_minutes"
+
+    if corrected_mic_dir.exists():
+        shutil.rmtree(corrected_mic_dir)
+    if corrected_minutes_dir.exists():
+        shutil.rmtree(corrected_minutes_dir)
+
+    corrected_mic_dir.mkdir(parents=True, exist_ok=True)
+
+    shutil.copy2(audio_path, corrected_mic_dir / "audio.wav")
+    (corrected_mic_dir / "audio.transcript.txt").write_text(corrected_transcript, encoding="utf-8")
+
+    cmd = [
+        sys.executable,
+        "-m",
+        "meeting_agent",
+        "microphone-to-minutes",
+        "--mic-dir",
+        str(corrected_mic_dir),
+        "--out-dir",
+        str(corrected_minutes_dir),
+        "--provider",
+        "sidecar",
+    ]
+
+    (post_dir / "corrected_minutes_command.txt").write_text(" ".join(cmd) + "\n", encoding="utf-8")
+    returncode, elapsed_s = run_command(cmd, post_dir / "corrected_minutes_run.log")
+    return returncode, elapsed_s, corrected_minutes_dir
 
 
 def write_metrics(
@@ -136,6 +179,9 @@ def write_metrics(
     applied: list[dict[str, str]],
     asr_returncode: int,
     asr_elapsed_s: float,
+    corrected_minutes_returncode: int | None,
+    corrected_minutes_elapsed_s: float | None,
+    corrected_minutes_dir: Path | None,
 ) -> dict[str, Any]:
     post_dir = out_dir / "post_correction"
     post_dir.mkdir(parents=True, exist_ok=True)
@@ -152,6 +198,10 @@ def write_metrics(
     metrics = {
         "asr_returncode": asr_returncode,
         "asr_elapsed_s": asr_elapsed_s,
+        "corrected_minutes_returncode": corrected_minutes_returncode,
+        "corrected_minutes_elapsed_s": corrected_minutes_elapsed_s,
+        "corrected_minutes_dir": str(corrected_minutes_dir) if corrected_minutes_dir else None,
+        "corrected_minutes_html": str(corrected_minutes_dir / "minutes.html") if corrected_minutes_dir else None,
         "reference": str(reference_path),
         "hypothesis": str(hypothesis_path),
         "glossary": str(glossary_path),
@@ -175,6 +225,9 @@ def write_metrics(
         "",
         f"- ASR return code: `{asr_returncode}`",
         f"- ASR elapsed seconds: `{asr_elapsed_s}`",
+        f"- Corrected minutes return code: `{corrected_minutes_returncode}`",
+        f"- Corrected minutes elapsed seconds: `{corrected_minutes_elapsed_s}`",
+        f"- Corrected minutes HTML: `{metrics['corrected_minutes_html']}`",
         f"- Normalized JA CER before: `{before}`",
         f"- Normalized JA CER after: `{after}`",
         f"- Absolute improvement: `{metrics['absolute_improvement']}`",
@@ -213,6 +266,7 @@ def main() -> int:
     parser.add_argument("--out-dir", required=True)
     parser.add_argument("--model-size", default="medium")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--generate-corrected-minutes", action="store_true")
     args = parser.parse_args()
 
     audio_path = Path(args.audio_path)
@@ -243,6 +297,17 @@ def main() -> int:
     glossary = load_json(glossary_path)
     corrected, applied = apply_glossary(original, glossary)
 
+    corrected_minutes_returncode = None
+    corrected_minutes_elapsed_s = None
+    corrected_minutes_dir = None
+
+    if args.generate_corrected_minutes:
+        corrected_minutes_returncode, corrected_minutes_elapsed_s, corrected_minutes_dir = generate_corrected_minutes(
+            audio_path=audio_path,
+            corrected_transcript=corrected,
+            out_dir=out_dir,
+        )
+
     metrics = write_metrics(
         out_dir=out_dir,
         reference_path=reference,
@@ -253,11 +318,14 @@ def main() -> int:
         applied=applied,
         asr_returncode=asr_returncode,
         asr_elapsed_s=asr_elapsed_s,
+        corrected_minutes_returncode=corrected_minutes_returncode,
+        corrected_minutes_elapsed_s=corrected_minutes_elapsed_s,
+        corrected_minutes_dir=corrected_minutes_dir,
     )
 
     print(json.dumps(metrics, ensure_ascii=False, indent=2))
     print(f"Wrote: {out_dir / 'post_correction' / 'metrics.md'}")
-    return 0 if asr_returncode == 0 else asr_returncode
+    return 0 if asr_returncode == 0 and (corrected_minutes_returncode in (None, 0)) else 1
 
 
 if __name__ == "__main__":
