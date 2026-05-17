@@ -23,7 +23,7 @@ classifiers = [
 asr = ["faster-whisper>=1.1.0"]
 audio = ["sounddevice>=0.4.6", "numpy>=1.24"]
 api = ["fastapi>=0.110.0", "uvicorn>=0.27.0"]
-dev = ["pytest>=8.0.0", "ruff>=1.1.0", "mypy>=1.8.0"]
+dev = ["pytest>=8.0.0", "ruff>=0.13.0,<1.0", "mypy>=1.8.0"]
 
 [project.scripts]
 meeting-agent = "meeting_agent.cli:main"
