@@ -70,3 +70,22 @@ It intentionally excludes:
 - Private evaluation datasets
 - Speaker-name mapping
 - Enterprise admin, billing, SSO, and audit products
+
+## Corrected minutes review CLI
+
+After generating both original and corrected ASR minutes output directories, maintainers can create a side-by-side private review artifact:
+
+```bash
+meeting-agent corrected-minutes-review \
+  --original-dir path/to/original_asr_minutes \
+  --corrected-dir path/to/corrected_asr_minutes \
+  --out-dir path/to/corrected_minutes_review \
+  --title "Corrected ASR minutes review"
+```
+
+The command writes:
+
+- `review.md`
+- `review.json`
+
+Use these outputs for private maintainer review of ASR correction quality, minutes deltas, and human review checklists. Do not publish real audio, transcripts, minutes, screenshots, or review artifacts unless they are explicitly sanitized.

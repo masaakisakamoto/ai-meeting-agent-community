@@ -39,13 +39,14 @@ from meeting_agent.desktop.bridge import BridgeConfig, handle_bridge_request, se
 from meeting_agent.desktop.local_server import serve_desktop_alpha
 from meeting_agent.desktop.package_check import run_desktop_package_check
 from meeting_agent.desktop.packager import build_desktop_alpha_bundle
-from meeting_agent.desktop.workspace import DesktopAlphaManager, DesktopAlphaReport
+from meeting_agent.desktop.workspace import DesktopAlphaManager
 from meeting_agent.evals.metrics import evaluate_text
 from meeting_agent.exporters.csv_exporter import ActionItemCSVExporter
 from meeting_agent.exporters.html import HTMLExporter
 from meeting_agent.exporters.json_exporter import read_json, write_json
 from meeting_agent.exporters.markdown import MarkdownExporter
 from meeting_agent.intelligence.glossary import apply_glossary, load_glossary
+from meeting_agent.workflows.corrected_minutes_review import write_review as write_corrected_minutes_review
 from meeting_agent.intelligence.rule_minutes import RuleBasedMinutesGenerator
 from meeting_agent.intelligence.verifier import MinutesVerifier
 from meeting_agent.providers.asr import FasterWhisperProvider, SidecarTranscriptProvider
@@ -727,6 +728,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--root", default=".")
     p.add_argument("--out-json", default=None)
     p.add_argument("--out-md", default=None)
+
+    p = sub.add_parser(
+        "corrected-minutes-review",
+        help="Compare original and corrected ASR minutes outputs",
+    )
+    p.add_argument("--original-dir", required=True)
+    p.add_argument("--corrected-dir", required=True)
+    p.add_argument("--out-dir", required=True)
+    p.add_argument("--title", default="Corrected ASR minutes review")
 
     p = sub.add_parser("demo", help="Run demo workflow using examples/sample_meeting_ja.txt")
     p.add_argument("--out-dir", required=True)
@@ -1570,6 +1580,17 @@ def _main_impl(argv: list[str] | None = None) -> int:
         print(report.to_json())
         return 0 if report.status in {"pass", "warn"} else 1
 
+    if args.command == "corrected-minutes-review":
+        payload = write_corrected_minutes_review(
+            original_dir=Path(args.original_dir),
+            corrected_dir=Path(args.corrected_dir),
+            out_dir=Path(args.out_dir),
+            title=args.title,
+        )
+        print(f"Wrote: {Path(args.out_dir) / 'review.md'}")
+        print(f"Wrote: {Path(args.out_dir) / 'review.json'}")
+        return 0
+
     if args.command == "demo":
         return _run_demo(args.out_dir)
 
@@ -2148,8 +2169,6 @@ def _run_demo(out_dir_value: str) -> int:
         "local_asr_smoke_gate.md": out_dir / "local_asr_smoke_gate.md",
         "local_asr_sidecar_minutes.html": out_dir / "local_asr_smoke" / "sidecar_asr_minutes" / "minutes.html",
         "asr_minutes_quality_gate.json": out_dir / "asr_minutes" / "quality_gate.json",
-        "recording_safety_gate.json": out_dir / "recording_safety_gate.json",
-        "recording_safety_gate.md": out_dir / "recording_safety_gate.md",
         "audio.transcript.txt": sidecar_path,
         "meeting_from_audio.json": out_dir / "meeting_from_audio.json",
         "minutes.json": out_dir / "audio_workflow" / "minutes.json",
