@@ -84,3 +84,6 @@ screenshots/
 venv/
 asr_accuracy_runs/
 asr_accuracy_lab/
+corrected_minutes_review_runs/
+asr_minutes_original_*/
+asr_minutes_corrected_*/
