@@ -10,7 +10,7 @@ This repository is intentionally designed as an **open-core-ready Community Edit
 
 > Current implementation status: **v2.2 Public Alpha**.
 >
-> This Community Edition has validated the core local workflow: transcript ingestion, evidence-linked minutes, rule-based extraction, verification, exports, simulated audio, controlled real microphone alpha capture, local ASR smoke with faster-whisper, ASR → Minutes, Desktop Alpha Bridge, Evidence Export, Screenshot Readiness, and Public Alpha Candidate gates.
+> This Community Edition has validated the core local workflow: transcript ingestion, evidence-linked minutes, rule-based extraction, verification, exports, simulated audio, controlled real microphone alpha capture, local ASR smoke with faster-whisper, ASR → Minutes, public-safe ASR glossary post-correction, corrected minutes generation, corrected minutes review, Desktop Alpha Bridge, Evidence Export, Screenshot Readiness, and Public Alpha Candidate gates.
 >
 > This is **not production-ready**. It does not include a signed native installer, system audio loopback capture, production Japanese Quality Engine, enterprise admin/SSO/billing, or hosted compliance controls.
 >
@@ -648,3 +648,17 @@ SNS announcements, commercial landing pages, and public release blogs remain sep
 ## v2.1 Historical private review milestone
 
 Historical note: this milestone added the Public Alpha Candidate Pack and Candidate Gate for private pre-launch review. Publication remained on hold at that stage until maintainer approval, real Mac evidence, local ASR smoke, screenshots, and final README review were complete.
+
+## ASR post-correction preview
+
+The Public Alpha includes a local, public-safe ASR correction path for maintainers and technical reviewers.
+
+Example corrected run:
+
+    PYTHONPATH=src python -m meeting_agent asr-to-minutes --audio-path mic_alpha_live/audio.wav --provider sidecar --sidecar mic_alpha_live/audio.transcript.txt --reference mic_alpha_live/audio.transcript.txt --correction-glossary configs/asr_correction_glossary_ja.example.json --generate-corrected-minutes --out-dir asr_minutes_corrected
+
+After generating original and corrected output directories, create a private review artifact:
+
+    PYTHONPATH=src python -m meeting_agent corrected-minutes-review --original-dir asr_minutes_original --corrected-dir asr_minutes_corrected --out-dir corrected_minutes_review
+
+This is a review workflow, not a production accuracy claim. It uses Community-safe glossary correction, writes local metrics and review files, and keeps private Quality Engine code, private datasets, real meeting audio, transcripts, and generated review artifacts out of the public repository.

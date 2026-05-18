@@ -89,3 +89,19 @@ The command writes:
 - `review.json`
 
 Use these outputs for private maintainer review of ASR correction quality, minutes deltas, and human review checklists. Do not publish real audio, transcripts, minutes, screenshots, or review artifacts unless they are explicitly sanitized.
+
+## ASR post-correction and corrected minutes
+
+The Public Alpha path can optionally apply a public-safe glossary after ASR transcription and generate minutes from the corrected transcript.
+
+    PYTHONPATH=src python -m meeting_agent asr-to-minutes --audio-path mic_alpha_live/audio.wav --provider sidecar --sidecar mic_alpha_live/audio.transcript.txt --reference mic_alpha_live/audio.transcript.txt --correction-glossary configs/asr_correction_glossary_ja.example.json --generate-corrected-minutes --out-dir asr_minutes_corrected
+
+When correction is enabled, the workflow writes the normal ASR-to-minutes artifacts plus post-correction artifacts such as:
+
+- `post_correction/metrics.json`
+- `post_correction/metrics.md`
+- `post_correction/hypothesis.original.txt`
+- `post_correction/hypothesis.corrected.txt`
+- `post_correction/transcript.corrected.json`
+
+The top-level `minutes.json`, `minutes.md`, `minutes.html`, verification, quality gate, replay, and Desktop Lite artifacts reflect the selected transcript path for that run. Use a separate output directory for the original ASR run when comparing before/after behavior.
