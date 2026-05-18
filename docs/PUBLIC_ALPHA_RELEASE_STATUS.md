@@ -52,3 +52,17 @@ Do not commit:
 - private evaluation datasets
 
 Do not record meetings without participant notice and appropriate consent.
+
+## ASR correction and review status
+
+Recent Public Alpha validation includes a Community-safe ASR correction and review path:
+
+- `meeting-agent asr-to-minutes --correction-glossary --generate-corrected-minutes`
+- `meeting-agent corrected-minutes-review`
+- public-safe positive regression coverage for actual glossary replacement
+- before/after CER metrics
+- corrected transcript artifacts
+- corrected minutes review artifacts
+- `private_core_included: false` checks
+
+This improves maintainer reviewability of ASR output. It does not mean production-grade Japanese transcription or production-grade correction accuracy.
